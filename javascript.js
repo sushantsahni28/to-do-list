@@ -2,12 +2,17 @@ var element = document.getElementById("list")
 let todos = []
 var ids=0;
 
+String.prototype.trim = function() {
+      return this.replace(/^\s+|\s+$/g,"");
+}
+
 function onAreaChange(e){
     var code = (e.keyCode ? e.keyCode : e.which);
     if(code == 13){
-        var string = document.getElementById("area-text").value
-    
-        if(string === ''){
+        var string = document.getElementById("area-text").value.trim()
+        console.log(string)
+
+        if(document.getElementById("area-text").value.trim() == ''){
             alert("You must write something first!!!")
         }else{
             var item = {
@@ -24,8 +29,10 @@ function onAreaChange(e){
 
             Save()
         }
-        document.getElementById("area-text").value = ""
+	    document.getElementById("area-text").value = ''
+        
     }
+	
 }
 
 /* <div class="task">
@@ -119,3 +126,20 @@ function Save(){
 
     window.localStorage.setItem("saved_tasks",save)
 }
+
+function Load(){
+    const data = window.localStorage.getItem("saved_tasks")
+
+    if(data){
+        todos = JSON.parse(data)
+    }
+    for(let i=0; i<todos.length; i++){
+        const item = todos[i];
+        ids = item.id;
+        ids++;
+
+        const { task_element } = createElement(item)
+        element.append(task_element)
+    }
+}
+Load();
